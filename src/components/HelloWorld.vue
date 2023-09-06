@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <span>{{message}}</span><br/>
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
@@ -29,6 +30,7 @@
         class="mb-5"
         cols="12"
       >
+
         <h2 class="headline font-weight-bold mb-3">
           What's next?
         </h2>
