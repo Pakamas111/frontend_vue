@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <span>{{message}}</span><br/>
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
@@ -13,7 +12,7 @@
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
+          Welcome {{username}} 
         </h1>
 
         <p class="subheading font-weight-regular">
@@ -147,7 +146,23 @@ export default {
         text: 'Frequently Asked Questions',
         href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions'
       }
-    ]
-  })
+    ],
+    username: ''
+  }),
+  created(){
+    this.$EventBus.$on('getUsername', this.getusername)
+    this.getusername ()
+  },
+  methods: {
+    getusername (){
+      if(localStorage.getItem('username') !== null) {
+        this.username = localStorage.getItem('username')
+      } else{
+        this.username = 'Vuetify'
+      }
+    }
+  }
 }
+
+
 </script>
