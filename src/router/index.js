@@ -28,7 +28,14 @@ const routes = [
     path: '/table',
     name: 'table',
     component: () => import('../views/TableView.vue')
+  },
+  {
+    path: '/conectbackend',
+    name: 'conectbackend',
+    component: () => import('../views/ConnectBackendView.vue')
+
   }
+
 ]
 
 const router = new VueRouter({

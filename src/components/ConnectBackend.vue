@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="employeeItem" class="elevation-1">
+    <v-data-table :headers="headers" :items="studentItem" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>จัดการข้อมูล</v-toolbar-title>
@@ -47,16 +47,16 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6" md="6">
+                <v-text-field v-model="studentId" label="ไอดี"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field v-model="firstname" label="ชื่อ"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field v-model="lastname" label="นามสกุล"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="salary" label="เงินเดือน"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="roles" label="ตำแหน่ง"></v-text-field>
+                <v-text-field v-model="email" label="อีเมล"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6"> </v-col>
             </v-row>
@@ -93,10 +93,10 @@
 <script>
 export default {
   data: () => ({
+    studentId: "",
     firstname: "",
     lastname: "",
-    salary: "",
-    roles: "",
+    email: "",
     dialogCreate: false,
     dialogDelete: false,
     headers: [
@@ -106,13 +106,13 @@ export default {
         sortable: false,
         value: "id",
       },
+      { text: "ไอดี", value: "studentId" },
       { text: "ชื่อ", value: "firstName" },
       { text: "นามสกุล", value: "lastName" },
-      { text: "เงินเดือน", value: "salary" },
-      { text: "ตำแหน่ง", value: "role" },
+      { text: "อีเมล", value: "email" },
       { text: "จัดการ", value: "actions", sortable: false },
     ],
-    employeeItem: [],
+    studentItem: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -129,7 +129,7 @@ export default {
       protein: 0,
     },
     formTitle: "",
-    idEmployee: "",
+    idstudent: "",
     idforDelete: "",
   }),
 
@@ -148,11 +148,11 @@ export default {
 
   methods: {
     async initialize() {
-      this.employeeItem = [];
+      this.studentItem = [];
       try {
-        var data = await this.axios.get("http://localhost:9000/employee");
-        console.log("data employee ====>", data);
-        this.employeeItem = data.data;
+        var data = await this.axios.get("http://localhost:9000/student");
+        console.log("data student ====>", data);
+        this.studentItem = data.data;
       } catch (error) {}
     },
     openDialog(Action, item) {
@@ -164,17 +164,16 @@ export default {
       } else {
         this.formTitle = "แก้ไขข้อมูล";
         this.dialogCreate = true;
+        this.studentId = item.studentId;
         this.firstname = item.firstName;
         this.lastname = item.lastName;
-        this.salary = item.salary;
-        this.roles = item.role.name;
-        this.idEmployee = item.id;
+        this.email = item.email;
       }
     },
 
     editItem(item) {
       console.log("item select", item);
-      this.editedIndex = this.employeeItem.indexOf(item);
+      this.editedIndex = this.studenteItem.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
@@ -187,7 +186,7 @@ export default {
     async deleteItemConfirm() {
       try {
         var response = await this.axios.delete(
-          "http://localhost:9000/employee/" + this.idforDelete
+          "http://localhost:9000/student/" + this.idforDelete
         );
         this.initialize();
       } catch (error) {
@@ -219,18 +218,15 @@ export default {
 
     async save(action) {
       var data = {
+        studentId: this.studentId,
         firstName: this.firstname,
         lastName: this.lastname,
-        salary: this.salary,
-        role: {
-          name: this.roles,
-        },
-        skills: [{ skill: "" }],
+        email: this.email,
       };
       if (action === "เพิ่มข้อมูล") {
         try {
           var dataResponse = await this.axios.post(
-            "http://localhost:9000/employee",
+            "http://localhost:9000/student",
             data
           );
           console.log("dataResponse ====>", dataResponse);
@@ -242,7 +238,7 @@ export default {
       } else {
         try {
           var dataResponse = await this.axios.put(
-            "http://localhost:9000/employee/" + this.idEmployee,
+            "http://localhost:9000/student/" + this.idstudent,
             data
           );
           console.log("dataResponse ====>", dataResponse);
